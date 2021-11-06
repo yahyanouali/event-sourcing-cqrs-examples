@@ -1,26 +1,23 @@
 package bankservice.port.incoming.adapter.resources.accounts.withdrawals;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
-
 import bankservice.domain.model.OptimisticLockingException;
 import bankservice.domain.model.account.NonSufficientFundsException;
 import bankservice.service.account.AccountNotFoundException;
 import bankservice.service.account.AccountService;
 import bankservice.service.account.WithdrawAccountCommand;
-import io.dropwizard.jersey.params.UUIDParam;
-import javax.validation.Valid;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Consumes(APPLICATION_JSON)
-@Produces(APPLICATION_JSON)
-@Path("/accounts/{id}/withdrawals")
+import javax.validation.Valid;
+import java.util.UUID;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
+@RestController
 public class WithdrawalsResource {
 
   private final AccountService accountService;
@@ -29,17 +26,17 @@ public class WithdrawalsResource {
     this.accountService = checkNotNull(accountService);
   }
 
-  @POST
-  public Response post(@PathParam("id") UUIDParam accountId, @Valid WithdrawalDto withdrawalDto)
+  @PostMapping("/accounts/{id}/withdrawals")
+  public ResponseEntity post(@PathVariable("id") UUID accountId, @RequestBody WithdrawalDto withdrawalDto)
       throws AccountNotFoundException, OptimisticLockingException {
 
-    WithdrawAccountCommand command = new WithdrawAccountCommand(accountId.get(),
+    WithdrawAccountCommand command = new WithdrawAccountCommand(accountId,
         withdrawalDto.getAmount());
     try {
       accountService.process(command);
     } catch (NonSufficientFundsException e) {
-      return Response.status(BAD_REQUEST).build();
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
-    return Response.noContent().build();
+    return ResponseEntity.noContent().build();
   }
 }

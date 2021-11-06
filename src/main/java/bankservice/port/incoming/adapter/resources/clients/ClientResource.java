@@ -1,28 +1,24 @@
 package bankservice.port.incoming.adapter.resources.clients;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 import bankservice.domain.model.client.Client;
 import bankservice.domain.model.client.Email;
 import bankservice.service.client.ClientService;
 import bankservice.service.client.UpdateClientCommand;
-import io.dropwizard.jersey.params.UUIDParam;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.Optional;
+import java.util.UUID;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
 
-@Consumes(APPLICATION_JSON)
-@Produces(APPLICATION_JSON)
-@Path("/clients/{id}")
+@RestController
 public class ClientResource {
 
   private ClientService clientService;
@@ -31,22 +27,22 @@ public class ClientResource {
     this.clientService = checkNotNull(clientService);
   }
 
-  @GET
-  public Response get(@PathParam("id") UUIDParam clientId) {
-    Optional<Client> possibleClient = clientService.loadClient(clientId.get());
+  @GetMapping("/clients/{id}")
+  public ResponseEntity get(@PathVariable("id") UUID clientId) {
+    Optional<Client> possibleClient = clientService.loadClient(clientId);
     if (!possibleClient.isPresent()) {
-      return Response.status(NOT_FOUND).build();
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
     ClientDto clientDto = toDto(possibleClient.get());
-    return Response.ok(clientDto).build();
+    return ResponseEntity.ok(clientDto);
   }
 
-  @PUT
-  public Response put(@PathParam("id") UUIDParam clientId, @Valid @NotNull ClientDto clientDto) {
+  @PutMapping
+  public ResponseEntity put(@PathVariable("id") UUID clientId, @Valid @NotNull ClientDto clientDto) {
     UpdateClientCommand command = new UpdateClientCommand(
-        clientId.get(), clientDto.getName(), new Email(clientDto.getEmail()));
+        clientId, clientDto.getName(), new Email(clientDto.getEmail()));
     clientService.process(command);
-    return Response.noContent().build();
+    return ResponseEntity.noContent().build();
   }
 
   private ClientDto toDto(Client client) {

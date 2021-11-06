@@ -1,5 +1,8 @@
 package bankservice.projection.accounttransactions;
 
+import jdk.jfr.Registered;
+import org.springframework.stereotype.Repository;
+
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
@@ -11,6 +14,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
+@Repository
 public class InMemoryTransactionsRepository implements TransactionsRepository {
 
   private Map<UUID, List<TransactionProjection>> accountTransactions = new ConcurrentHashMap<>();

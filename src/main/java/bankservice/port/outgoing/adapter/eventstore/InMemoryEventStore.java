@@ -7,12 +7,15 @@ import bankservice.domain.model.Event;
 import bankservice.domain.model.EventStore;
 import bankservice.domain.model.OptimisticLockingException;
 import com.google.common.collect.ImmutableList;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
+@Service
 public class InMemoryEventStore implements EventStore {
 
   private final Map<UUID, List<Event>> eventStore = new ConcurrentHashMap<>();

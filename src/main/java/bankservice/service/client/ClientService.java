@@ -9,11 +9,14 @@ import bankservice.domain.model.EventStore;
 import bankservice.domain.model.OptimisticLockingException;
 import bankservice.domain.model.client.Client;
 import bankservice.service.Retrier;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+@Service
 public class ClientService {
 
   private final EventStore eventStore;

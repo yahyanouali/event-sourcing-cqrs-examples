@@ -4,36 +4,35 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.5.6</version>
+  </parent>
+
   <groupId>bank-service</groupId>
   <artifactId>bank-service</artifactId>
   <version>1.0-SNAPSHOT</version>
 
   <properties>
-    <java.version>14</java.version>
-    <dropwizard.version>2.0.24</dropwizard.version>
-    <jersey.version>2.33</jersey.version>
+    <java.version>17</java.version>
     <junit.version>5.7.2</junit.version>
     <error_prone.version>2.9.0</error_prone.version>
     <mvn-test-plugins.version>3.0.0-M5</mvn-test-plugins.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <automatic-module.name>bank.service</automatic-module.name>
-    <argLine>--add-opens java.base/java.math=${automatic-module.name}
-             --add-opens java.base/java.time=${automatic-module.name}</argLine>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>io.dropwizard</groupId>
-      <artifactId>dropwizard-core</artifactId>
-      <version>${dropwizard.version}</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.glassfish.jersey.ext</groupId>
-      <artifactId>jersey-declarative-linking</artifactId>
-      <version>${jersey.version}</version>
-    </dependency>
 
     <dependency>
       <groupId>commons-validator</groupId>
@@ -51,6 +50,12 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>30.1.1-jre</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -80,79 +85,10 @@
       <version>3.12.4</version>
       <scope>test</scope>
     </dependency>
-
-    <dependency>
-      <groupId>io.dropwizard</groupId>
-      <artifactId>dropwizard-testing</artifactId>
-      <version>${dropwizard.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>io.dropwizard</groupId>
-      <artifactId>dropwizard-client</artifactId>
-      <version>${dropwizard.version}</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.checkerframework</groupId>
-        <artifactId>checker-qual</artifactId>
-        <version>3.18.0</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.glassfish.jersey.core</groupId>
-        <artifactId>jersey-client</artifactId>
-        <version>${jersey.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.google.errorprone</groupId>
-        <artifactId>error_prone_annotations</artifactId>
-        <version>${error_prone.version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <release>${java.version}</release>
-          <fork>true</fork>
-          <showWarnings>true</showWarnings>
-          <compilerArgs>
-            <arg>-XDcompilePolicy=simple</arg>
-            <arg>-Xplugin:ErrorProne</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
-            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
-            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
-            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
-          </compilerArgs>
-          <annotationProcessorPaths>
-            <path>
-              <groupId>com.google.errorprone</groupId>
-              <artifactId>error_prone_core</artifactId>
-              <version>${error_prone.version}</version>
-            </path>
-          </annotationProcessorPaths>
-        </configuration>
-      </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
@@ -202,72 +138,6 @@
         </executions>
       </plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.2.0</version>
-        <configuration>
-          <outputXML>true</outputXML>
-          <ignoredUsedUndeclaredDependencies>
-            <!-- part of dropwizard core -->
-            <ignoredUsedUndeclaredDependency>io.dropwizard:*</ignoredUsedUndeclaredDependency>
-            <ignoredUsedUndeclaredDependency>
-              com.fasterxml.jackson.core:*
-            </ignoredUsedUndeclaredDependency>
-            <ignoredUsedUndeclaredDependency>jakarta.validation::*</ignoredUsedUndeclaredDependency>
-            <ignoredUsedUndeclaredDependency>jakarta.ws.rs:*</ignoredUsedUndeclaredDependency>
-            <ignoredUsedUndeclaredDependency>
-              org.glassfish.jersey.core:*
-            </ignoredUsedUndeclaredDependency>
-          </ignoredUsedUndeclaredDependencies>
-        </configuration>
-        <executions>
-          <execution>
-            <id>analyze</id>
-            <phase>test-compile</phase>
-            <goals>
-              <goal>analyze-only</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.4</version>
-        <configuration>
-          <createDependencyReducedPom>true</createDependencyReducedPom>
-          <filters>
-            <filter>
-              <artifact>*:*</artifact>
-              <excludes>
-                <exclude>META-INF/*.SF</exclude>
-                <exclude>META-INF/*.DSA</exclude>
-                <exclude>META-INF/*.RSA</exclude>
-              </excludes>
-            </filter>
-          </filters>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <transformers>
-                <transformer
-                  implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                <transformer
-                  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>bankservice.bootstrap.BankServiceApplication</mainClass>
-                </transformer>
-              </transformers>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

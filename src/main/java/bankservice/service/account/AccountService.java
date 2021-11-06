@@ -11,11 +11,14 @@ import bankservice.domain.model.account.Account;
 import bankservice.domain.model.account.NonSufficientFundsException;
 import bankservice.service.Retrier;
 import com.google.common.eventbus.EventBus;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+@Service
 public class AccountService {
 
   private final EventStore eventStore;

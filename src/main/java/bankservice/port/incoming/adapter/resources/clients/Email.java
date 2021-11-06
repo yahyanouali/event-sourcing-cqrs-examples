@@ -3,7 +3,7 @@ package bankservice.port.incoming.adapter.resources.clients;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import bankservice.domain.model.client.Email.EmailSpecification;
+import bankservice.domain.model.client.EmailSpecification;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import javax.validation.Constraint;
@@ -27,7 +27,7 @@ public @interface Email {
 
   class EmailValidator implements ConstraintValidator<Email, String> {
 
-    private EmailSpecification emailSpecification = new EmailSpecification();
+    private EmailSpecification emailSpecification = EmailSpecification.getInstance();
 
     @Override
     public void initialize(Email constraintAnnotation) {

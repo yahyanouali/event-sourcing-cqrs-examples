@@ -3,6 +3,8 @@ package bankservice.projection.clientaccounts;
 import static java.util.Collections.emptyMap;
 
 import com.google.common.collect.ImmutableList;
+import org.springframework.stereotype.Repository;
+
 import java.math.BigDecimal;
 import java.util.AbstractMap;
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Repository
 public class InMemoryAccountsRepository implements AccountsRepository {
 
   private final Map<UUID, Map<UUID, AccountProjection>> clientAccounts = new ConcurrentHashMap<>();

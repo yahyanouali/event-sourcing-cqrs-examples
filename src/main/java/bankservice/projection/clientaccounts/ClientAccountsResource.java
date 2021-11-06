@@ -1,20 +1,16 @@
 package bankservice.projection.clientaccounts;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
-import io.dropwizard.jersey.params.UUIDParam;
 import java.util.List;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
+import java.util.UUID;
 
-@Consumes(APPLICATION_JSON)
-@Produces(APPLICATION_JSON)
-@Path("clients/{id}/accounts")
+import static com.google.common.base.Preconditions.checkNotNull;
+
+@RestController
 public class ClientAccountsResource {
 
   private final AccountsRepository accountsRepository;
@@ -23,9 +19,9 @@ public class ClientAccountsResource {
     this.accountsRepository = checkNotNull(accountsRepository);
   }
 
-  @GET
-  public Response get(@PathParam("id") UUIDParam clientId) {
-    List<AccountProjection> accounts = accountsRepository.getAccounts(clientId.get());
-    return Response.ok(accounts).build();
+  @GetMapping("clients/{id}/accounts")
+  public ResponseEntity get(@PathVariable("id") UUID clientId) {
+    List<AccountProjection> accounts = accountsRepository.getAccounts(clientId);
+    return ResponseEntity.ok(accounts);
   }
 }

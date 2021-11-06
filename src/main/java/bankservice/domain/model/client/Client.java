@@ -8,6 +8,8 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import bankservice.domain.model.Aggregate;
 import bankservice.domain.model.Event;
+
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,7 +23,7 @@ public class Client extends Aggregate {
     validateName(name);
     validateEmail(email);
     ClientEnrolledEvent clientEnrolledEvent = new ClientEnrolledEvent(
-        id, now(UTC), getNextVersion(), name, email);
+        id, ZonedDateTime.now(UTC), getNextVersion(), name, email);
     applyNewEvent(clientEnrolledEvent);
   }
 
@@ -31,12 +33,12 @@ public class Client extends Aggregate {
 
   public void update(String name, Email email) {
     ClientUpdatedEvent clientUpdatedEvent = new ClientUpdatedEvent(
-        getId(), now(UTC), getNextVersion(), name, email);
+        getId(), ZonedDateTime.now(UTC), getNextVersion(), name, email);
     applyNewEvent(clientUpdatedEvent);
   }
 
   @SuppressWarnings("unused")
-  public void apply(ClientEnrolledEvent event) {
+  private void apply(ClientEnrolledEvent event) {
     this.name = event.getName();
     this.email = event.getEmail();
   }

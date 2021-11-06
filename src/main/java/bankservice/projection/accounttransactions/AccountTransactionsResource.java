@@ -1,18 +1,16 @@
 package bankservice.projection.accounttransactions;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.UUID;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
 
-@Produces(APPLICATION_JSON)
-@Path("/accounts/{id}/transactions")
+import static com.google.common.base.Preconditions.checkNotNull;
+
+@RestController("/accounts/{id}/transactions")
 public class AccountTransactionsResource {
 
   private TransactionsRepository transactionsRepository;
@@ -21,10 +19,10 @@ public class AccountTransactionsResource {
     this.transactionsRepository = checkNotNull(transactionsRepository);
   }
 
-  @GET
-  public Response get(@PathParam("id") UUID accountId) {
+  @GetMapping
+  public ResponseEntity get(@PathVariable("id") UUID accountId) {
     List<TransactionProjection> transactionProjections = transactionsRepository
         .listByAccount(accountId);
-    return Response.ok(transactionProjections).build();
+    return ResponseEntity.ok(transactionProjections);
   }
 }
